@@ -52,6 +52,9 @@ else
     BROKEN_COUNT=0
 fi
 
+exit_code=$?
+
+
 # Return results
 if [ "$BROKEN_COUNT" -gt 0 ] 
 then 
@@ -60,7 +63,7 @@ then
     grep -E 'BROKEN' <<< "$OUTPUT" | awk '{print "[✗] " $2 "\n" }'
     echo -e "$PURPLE ============================== $NC"
     echo ::set-output name=result::"$RESULT"
-    exit 1
+    exit_code=1
 elif [ "$TOTAL_COUNT" == 0 ]
 then
     echo -e "Didn't find any links to check"
@@ -71,3 +74,16 @@ else
     echo -e "$PURPLE ============================== $NC"
 fi
 exit 0
+
+# TODO: 
+#   pass through exit code and choose whether to use it or not
+#   make and store output of report to be passed to issue filing next step
+#   switch inputs from numbered to named args and pass through using ENV kind of like https://github.com/lycheeverse/lychee-action/blob/master/action.yml
+# Pass link-checker exit code to next step
+echo ::set-output name=exit_code::$exit_code
+
+# If `fail` is set to `true`, propagate the real exit value to the workflow
+# runner. This will cause the pipeline to fail on exit != 0.
+if [ "$INPUT_FAIL" = true ] ; then
+    exit ${exit_code}
+fi

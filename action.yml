@@ -1,34 +1,40 @@
-name: 'broken-link-check'
-description: 'Find broken links, missing images, etc within your HTML.'
-author: 'Celine Kurpershoek'
-branding: 
-  icon: 'anchor'
-  color: 'purple'
+name: "broken-link-check"
+description: "Find broken links, missing images, etc within your HTML."
+author: "Celine Kurpershoek"
+branding:
+  icon: "anchor"
+  color: "purple"
 inputs:
-  url:  # id of input
-    description: 'Url of site'
+  url: # id of input
+    description: "Url of site"
     required: true
-    default: 'https://github.com/celinekurpershoek/link-checker'
+    default: "https://github.com/celinekurpershoek/link-checker"
   honorRobotExclusions:
-    description: 'Overwrite standard skipping rel=nofollow links'
+    description: "Overwrite standard skipping rel=nofollow links"
     required: false
     default: true
-  ignorePatterns: 
-    description: 'Ignore urls based on patterns'
+    type: boolean
+  ignorePatterns:
+    description: "Ignore urls based on patterns"
     required: false
-    default: ''
-  recursiveLinks: 
-    description: 'Walk through the whole website and check all the urls'
+    default: ""
+  recursiveLinks:
+    description: "Walk through the whole website and check all the urls"
+    required: false
+    default: false
+  fail:
+    description: "Fail on broken links"
     required: false
     default: false
 outputs:
   result: # id of output
-    description: 'Report of links'
+    description: "Report of links"
 runs:
-  using: 'docker'
-  image: 'Dockerfile'
+  using: "docker"
+  image: "Dockerfile"
   args:
     - ${{ inputs.url }}
     - ${{ inputs.honorRobotExclusions }}
     - ${{ inputs.ignorePatterns }}
     - ${{ inputs.recursiveLinks }}
+    - ${{ inputs.fail }}
