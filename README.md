@@ -62,4 +62,4 @@ A boolean to do a site-wide check, it will add the `blc` `-ro` param to the comm
 ## Test
 
 There is a broken link in this document as a test:
-[A broken link](http://wliuhfhiusdfdsiubfp9248hrp9243hrpaewoufnapfufsfwep98fh4p239onfsain.com)
+[A broken link](https://gogogogogogogogoqw09e40eqond.com/)
