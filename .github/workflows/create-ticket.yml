@@ -1,0 +1,24 @@
+name: Broken link check with issue creation
+on: [push]
+
+jobs:
+  brokenLinks:
+    runs-on: ubuntu-latest
+    name: Check for broken links
+    steps:
+      - name: Check for broken links
+        id: link-report
+        uses: roc/link-checker@master
+        with:
+          url: "https://github.com/roc/link-checker"
+          blc_args: --verbose --exclude github --follow false
+          allow_failures: true
+          output_file: yeah/blc/out.md
+
+      - name: Create Issue From File
+        uses: peter-evans/create-issue-from-file@v4
+        if: ${{ steps.link-report.outputs.exit_code != 0 }}
+        with:
+          title: Link Checker Report
+          content-filepath: yeah/blc/out.md
+          labels: report, automated issue
