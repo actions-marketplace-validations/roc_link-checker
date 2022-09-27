@@ -39,3 +39,4 @@ runs:
     - ${{ inputs.fail }}
   env:
     INPUT_FOO: "foooo"
+    INPUT_FAIL: ${{ inputs.fail }}

@@ -4,6 +4,7 @@ set -e
 
 
 echo "we got it?" $INPUT_FOO
+echo "we got INPUT_FAIL?" $INPUT_FAIL
 
 NC='\033[0m' # No Color
 RED='\033[0;31m'
