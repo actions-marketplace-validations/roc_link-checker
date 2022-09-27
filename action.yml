@@ -13,7 +13,7 @@ inputs:
     description: "Overwrite standard skipping rel=nofollow links"
     required: false
     default: true
-  input_force_follow:
+  force_follow:
     description: "Overwrite standard skipping rel=nofollow links"
     required: false
     default: true

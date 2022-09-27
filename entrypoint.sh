@@ -5,6 +5,7 @@ set -e
 # Env vars work! Great!
 echo "we got it?" $INPUT_FOO
 echo "we got input_fail?" $input_fail
+echo "we got inputs_url?" $inputs_url
 echo "we got input_force_follow?" $input_force_follow
 # TODO
     # set all vars as named env vars
