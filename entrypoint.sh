@@ -50,6 +50,7 @@ cat "${BLC_TMP}" >"${GITHUB_STEP_SUMMARY}"
 
 echo "[Full Github Actions output](${GITHUB_WORKFLOW_URL})" >>$BLC_TMP
 
+echo "exit code was ${exit_code}"
 echo ::set-output name=exit_code::$exit_code
 echo ::set-output name=result::$(cat $BLC_TMP)
 
