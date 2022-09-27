@@ -59,7 +59,9 @@ echo ::set-output name=result::$(cat $BLC_TMP)
 
 # If `inputs_allow_failures` is set to `true`, propagate the real exit value to the workflow
 # runner. This will cause the pipeline to fail on exit != 0.
-if [ "$inputs_allow_failures" = true ]; then
+if [ "$inputs_allow_failures" = false ]; then
     echo "exiting with $exit_code"
     exit ${exit_code}
+else
+    exit 0
 fi
