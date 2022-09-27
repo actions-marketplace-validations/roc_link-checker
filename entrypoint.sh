@@ -2,9 +2,6 @@
 # Fail when any task exits with a non-zero error
 set -e
 
-NC='\033[0m' # No Color
-GREEN='\033[0;32m'
-YELLOW='\033[0;33m'
 PURPLE='\033[0;34m'
 
 # TODO
@@ -28,17 +25,20 @@ mkdir -p "$(dirname $BLC_TMP)"
 # Install the broken-link-checker module globally on the docker instance
 npm i -g broken-link-checker -s
 
-echo -e "$PURPLE=== BROKEN LINK CHECKER ===$NC" 2>&1 | tee $BLC_TMP
-echo -e "Running broken link checker on URL: $GREEN $inputs_url $NC" 2>&1 | tee -a $BLC_TMP
+echo "## Broken link checker report\n" 2>&1 | tee $BLC_TMP
+echo "### Running broken link checker on URL: $inputs_url\n\n" 2>&1 | tee -a $BLC_TMP
 
 if [ -z "$inputs_url" ] || [ "$inputs_url" == 'https://github.com/roc/link-checker' ]; then
-    echo -e "$YELLOW Warning: Running test on default URL, please provide a URL in your action.yml.$NC" >>$BLC_TMP
+    echo -e "Warning: Running test on default URL, please provide a URL in your action.yml." >>$BLC_TMP
 fi
 
 # Run broken link checker, save to markdown file, also show stdout & sterr while running
 # Use eval to capture exit_code and use later
 echo "blc $inputs_url $inputs_blc_args"
+# Wrap report in backticks for md rendering
+echo '```' >>$BLC_TMP
 blc $inputs_url $inputs_blc_args 2>&1 | tee -a $BLC_TMP
+echo '```' >>$BLC_TMP
 
 # Set exit code on broken count
 if grep -q 'BROKEN' $BLC_TMP; then
@@ -57,7 +57,7 @@ echo "[Full Github Actions output](${GITHUB_WORKFLOW_URL})" >>$BLC_TMP
 
 echo ::set-output name=result::$(cat $BLC_TMP)
 
-# If `inputs_allow_failures` is set to `true`, propagate the real exit value to the workflow
+# If `inputs_allow_failures` is set to `false`, propagate the real exit value to the workflow
 # runner. This will cause the pipeline to fail on exit != 0.
 if [ "$inputs_allow_failures" = false ]; then
     echo "exiting with $exit_code"
