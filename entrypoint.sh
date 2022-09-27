@@ -12,7 +12,6 @@ echo "env:"$env
 
 # Setup temporary file for output
 BLC_TMP="${inputs_output_file:-blc/out.md}"
-# BLC_TMP=$inputs_output_file || "blc/out.md"
 GITHUB_WORKFLOW_URL="https://github.com/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}?check_suite_focus=true"
 
 # Create temp dir
@@ -48,10 +47,10 @@ exit_code=$?
 # Pass link-checker exit code to next step
 echo ::set-output name=exit_code::$exit_code
 
-echo "[Full Github Actions output](${GITHUB_WORKFLOW_URL})" 2>&1 | tee $BLC_TMP
-echo ::set-output name=result::$(cat $BLC_TMP)
-
 cat "${BLC_TMP}" >"${GITHUB_STEP_SUMMARY}"
+
+echo "[Full Github Actions output](${GITHUB_WORKFLOW_URL})" >>$BLC_TMP
+echo ::set-output name=result::$(cat $BLC_TMP)
 
 # If `inputs_allow_failures` is set to `true`, propagate the real exit value to the workflow
 # runner. This will cause the pipeline to fail on exit != 0.

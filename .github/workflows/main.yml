@@ -19,4 +19,4 @@ jobs:
           echo "cat ./blc/out.md"
           cat ./blc/out.md
           echo "cat blc/out.md"
-          cat blc/out.md
+          cat ./blc/out.md
