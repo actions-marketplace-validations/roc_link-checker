@@ -20,6 +20,6 @@ jobs:
         uses: peter-evans/create-issue-from-file@v4
         if: ${{ steps.link-report.outputs.exit_code != 0 }}
         with:
-          title: Link Checker Report
+          title: Link Checker Report for github.com/roc/link-checker
           content-filepath: yeah/blc/out.md
           labels: report, automated issue
