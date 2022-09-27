@@ -25,6 +25,8 @@ inputs:
 outputs:
   result: # id of output
     description: "Report of links"
+  exit_code:
+    description: "The exit code returned from BLC"
 runs:
   using: "docker"
   image: "Dockerfile"
