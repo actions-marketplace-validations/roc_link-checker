@@ -2,9 +2,16 @@
 # Fail when any task exits with a non-zero error
 set -e
 
-
+# Env vars work! Great!
 echo "we got it?" $INPUT_FOO
-echo "we got INPUT_FAIL?" $INPUT_FAIL
+echo "we got input_fail?" $input_fail
+echo "we got input_force_follow?" $input_force_follow
+# TODO
+    # set all vars as named env vars
+    # pipe all output into a md/output file
+    # pass output to next steps
+    # allow passing of all args to blc, --verbose, --filter-level, --get, --user-agent etc
+
 
 NC='\033[0m' # No Color
 RED='\033[0;31m'
@@ -16,20 +23,23 @@ PURPLE='\033[0;34m'
 npm i -g broken-link-checker -s
 
 echo -e "$PURPLE=== BROKEN LINK CHECKER ===$NC"
-echo -e "Running broken link checker on URL: $GREEN $1 $NC"
+echo -e "Running broken link checker on URL: $GREEN $inputs_url $NC"
 
 # Create exclude and settings strings based on configuration
 EXCLUDE="" 
-SET_FOLLOW=""
+# SET_FOLLOW=""
 SET_RECURSIVE=""
 
-if [ -z "$1" ] || [ "$1" == 'https://github.com/celinekurpershoek/link-checker' ]
+if [ -z "$inputs_url" ] || [ "$inputs_url" == 'https://github.com/roc/link-checker' ]
 then
     echo -e "$YELLOW Warning: Running test on default URL, please provide a URL in your action.yml.$NC"
 fi
 
 # Set arguments for blc
-[ "$2" == false ] && SET_FOLLOW="--follow"
+# --follow,  -f Force-follow robot exclusions.
+FOLLOW=$input_force_follow
+
+# [ "$2" == false ] && SET_FOLLOW="--follow"
 
 [ "$4" == true ] && SET_RECURSIVE="-ro"
 
@@ -40,9 +50,14 @@ done
 # Echo settings if any are set
 echo -e "Configuration: \n Honor robot exclusions: $GREEN$2$NC, \n Exclude URLs that match: $GREEN$3$NC, \n Resursive URLs: $GREEN$4$NC"
 
+
+# TODO: execute using eval e.g.
+# eval lychee ${FORMAT} --output ${LYCHEE_TMP} ${ARGS}
+
+
 # Create command and remove extra quotes
 # Put result in variable to be able to iterate on it later
-OUTPUT="$(blc "$1" $EXCLUDE $SET_FOLLOW $SET_RECURSIVE -v | sed 's/"//g')"
+$OUTPUT="$(blc "$inputs_url" $EXCLUDE $FOLLOW $SET_RECURSIVE -v | sed 's/"//g')"
 
 # Count lines of output
 TOTAL_COUNT="$(wc -l <<< "$OUTPUT")"
@@ -71,15 +86,17 @@ then
 elif [ "$TOTAL_COUNT" == 0 ]
 then
     echo -e "Didn't find any links to check"
+    exit_code=0
 else 
     RESULT="✓ Checked $TOTAL_COUNT link(s), no broken links found!"
     echo -e "$GREEN $RESULT $NC"
     echo ::set-output name=result::"$RESULT"
     echo -e "$PURPLE ============================== $NC"
+    exit_code=0
 fi
-exit 0
+# exit 0
 
-# TODO: 
+# TODO:
 #   pass through exit code and choose whether to use it or not
 #   make and store output of report to be passed to issue filing next step
 #   switch inputs from numbered to named args and pass through using ENV kind of like https://github.com/lycheeverse/lychee-action/blob/master/action.yml
@@ -88,6 +105,7 @@ echo ::set-output name=exit_code::$exit_code
 
 # If `fail` is set to `true`, propagate the real exit value to the workflow
 # runner. This will cause the pipeline to fail on exit != 0.
-if [ "$INPUT_FAIL" = true ] ; then
+if [ exit_code !=0 &&  "$input_fail" = true ] ; then
     exit ${exit_code}
 fi
+[exit_code == 0] && exit ${exit_code} 

@@ -13,6 +13,10 @@ inputs:
     description: "Overwrite standard skipping rel=nofollow links"
     required: false
     default: true
+  input_force_follow:
+    description: "Overwrite standard skipping rel=nofollow links"
+    required: false
+    default: true
   ignorePatterns:
     description: "Ignore urls based on patterns"
     required: false
@@ -38,5 +42,6 @@ runs:
     - ${{ inputs.recursiveLinks }}
     - ${{ inputs.fail }}
   env:
-    INPUT_FOO: "foooo"
-    INPUT_FAIL: ${{ inputs.fail }}
+    inputs_url: ${{ inputs.url }}
+    input_fail: ${{ inputs.fail }}
+    input_force_follow: ${{ inputs.force_follow }}
