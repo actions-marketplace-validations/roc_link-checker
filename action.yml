@@ -17,6 +17,11 @@ inputs:
     description: "Pass the job even if the link checker finds broken links"
     required: false
     default: false
+  output_file:
+    description: "Summary output file path"
+    default: "blc/out.md"
+    required: false
+
 outputs:
   result: # id of output
     description: "Report of links"
@@ -29,3 +34,4 @@ runs:
     inputs_url: ${{ inputs.url }}
     inputs_allow_failures: ${{ inputs.allow_failures }}
     inputs_blc_args: ${{ inputs.blc_args }}
+    inputs_output_file: ${{ inputs.output_file }}

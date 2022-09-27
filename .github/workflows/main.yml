@@ -16,7 +16,7 @@ jobs:
       - name: Get the result
         run: |
           echo "steps.link-report.outputs.result:" ${{steps.link-report.outputs.result}}
-          echo "cat /tmp/blc/out.md"
-          cat /tmp/blc/out.md
+          echo "cat blc/out.md"
+          cat blc/out.md
           echo "cat ./blc/out.md"
           cat ./blc/out.md

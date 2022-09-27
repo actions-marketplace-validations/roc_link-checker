@@ -49,8 +49,8 @@ echo ::set-output name=exit_code::$exit_code
 
 cat "${BLC_TMP}" >"${GITHUB_STEP_SUMMARY}"
 
-echo "[Full Github Actions output](${GITHUB_WORKFLOW_URL})" 2>&1 | tee $INPUT_OUTPUT
-echo ::set-output name=result::"$BLC_TMP"
+echo "[Full Github Actions output](${GITHUB_WORKFLOW_URL})" 2>&1 | tee $inputs_output_file
+echo ::set-output name=result::$(cat $BLC_TMP)
 
 # If `inputs_allow_failures` is set to `true`, propagate the real exit value to the workflow
 # runner. This will cause the pipeline to fail on exit != 0.
