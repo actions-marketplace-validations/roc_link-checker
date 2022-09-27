@@ -16,7 +16,7 @@ inputs:
   force_follow:
     description: "Overwrite standard skipping rel=nofollow links"
     required: false
-    default: true
+    default: false
   ignorePatterns:
     description: "Ignore urls based on patterns"
     required: false

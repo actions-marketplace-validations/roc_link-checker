@@ -14,5 +14,6 @@ jobs:
           honorRobotExclusions: true
           ignorePatterns: "github"
           recursiveLinks: false
+          force_follow: false
       - name: Get the result
         run: echo "${{steps.link-report.outputs.result}}"

@@ -3,7 +3,6 @@
 set -e
 
 # Env vars work! Great!
-echo "we got it?" $INPUT_FOO
 echo "we got input_fail?" $input_fail
 echo "we got inputs_url?" $inputs_url
 echo "we got input_force_follow?" $input_force_follow
@@ -55,6 +54,8 @@ echo -e "Configuration: \n Honor robot exclusions: $GREEN$2$NC, \n Exclude URLs 
 # Create command and remove extra quotes
 # Put result in variable to be able to iterate on it later
 $OUTPUT="$(blc "$inputs_url" $EXCLUDE $FOLLOW $SET_RECURSIVE -v | sed 's/"//g')"
+
+echo "out:" $OUTPUT
 
 # Count lines of output
 TOTAL_COUNT="$(wc -l <<<"$OUTPUT")"
