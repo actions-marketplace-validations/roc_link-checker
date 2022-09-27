@@ -50,6 +50,7 @@ echo -e "Configuration: \n Honor robot exclusions: $GREEN$2$NC, \n Exclude URLs 
 
 # TODO: execute using eval e.g.
 # eval lychee ${FORMAT} --output ${LYCHEE_TMP} ${ARGS}
+echo "blc $inputs_url $EXCLUDE --follow=$FOLLOW $SET_RECURSIVE -v"
 
 blc $inputs_url $EXCLUDE --follow=$FOLLOW $SET_RECURSIVE -v
 
