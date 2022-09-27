@@ -11,7 +11,8 @@ PURPLE='\033[0;34m'
 echo "env:"$env
 
 # Setup temporary file for output
-BLC_TMP="/tmp/blc/out.md"
+BLC_TMP="${inputs_output_file:-blc/out.md}"
+# BLC_TMP=$inputs_output_file || "blc/out.md"
 GITHUB_WORKFLOW_URL="https://github.com/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}?check_suite_focus=true"
 
 # Create temp dir
@@ -47,67 +48,14 @@ exit_code=$?
 # Pass link-checker exit code to next step
 echo ::set-output name=exit_code::$exit_code
 
-cat "${BLC_TMP}" >"${GITHUB_STEP_SUMMARY}"
-
-echo "[Full Github Actions output](${GITHUB_WORKFLOW_URL})" 2>&1 | tee $inputs_output_file
+echo "[Full Github Actions output](${GITHUB_WORKFLOW_URL})" 2>&1 | tee $BLC_TMP
 echo ::set-output name=result::$(cat $BLC_TMP)
+
+cat "${BLC_TMP}" >"${GITHUB_STEP_SUMMARY}"
 
 # If `inputs_allow_failures` is set to `true`, propagate the real exit value to the workflow
 # runner. This will cause the pipeline to fail on exit != 0.
 if [ "$inputs_allow_failures" = true ]; then
+    echo "got into inputs_allow_failures"
     exit ${exit_code}
 fi
-
-# echo "[Full Github Actions output](${GITHUB_WORKFLOW_URL})" >>"${BLC_TMP}"
-
-# Create command and remove extra quotes
-# Put result in variable to be able to iterate on it later
-# $OUTPUT="$(blc "$inputs_url" $EXCLUDE $FOLLOW $SET_RECURSIVE -v | sed 's/"//g')"
-
-# echo "out:" $OUTPUT
-
-# # Count lines of output
-# TOTAL_COUNT="$(wc -l <<<"$OUTPUT")"
-
-# # Count 'BROKEN' lines of result or return 0
-# if grep -q 'BROKEN' <<<"$OUTPUT"; then
-#     BROKEN="$(grep -q 'BROKEN' <<<"$OUTPUT")"
-#     BROKEN_COUNT="$(wc -l <<<"$BROKEN")"
-# else
-#     BROKEN_COUNT=0
-# fi
-
-# # Return results
-# if [ "$BROKEN_COUNT" -gt 0 ]; then
-#     RESULT="$BROKEN_COUNT broken link(s) found (out of $TOTAL_COUNT total)"
-#     echo -e "$RED Failed $RESULT: $NC"
-#     grep -E 'BROKEN' <<<"$OUTPUT" | awk '{print "[✗] " $2 "\n" }'
-#     echo -e "$PURPLE ============================== $NC"
-#     echo ::set-output name=result::"$RESULT"
-#     exit_code=1
-# elif [ "$TOTAL_COUNT" == 0 ]; then
-#     echo -e "Didn't find any links to check"
-#     exit_code=0
-# else
-#     RESULT="✓ Checked $TOTAL_COUNT link(s), no broken links found!"
-#     echo -e "$GREEN $RESULT $NC"
-#     echo ::set-output name=result::"$RESULT"
-#     echo -e "$PURPLE ============================== $NC"
-#     exit_code=0
-# fi
-# # exit 0
-
-# # TODO:
-# #   pass through exit code and choose whether to use it or not
-# #   make and store output of report to be passed to issue filing next step
-# #   switch inputs from numbered to named args and pass through using ENV kind of like https://github.com/lycheeverse/lychee-action/blob/master/action.yml
-# # Pass link-checker exit code to next step
-# echo ::set-output name=exit_code::$exit_code
-
-# # If `fail` is set to `true`, propagate the real exit value to the workflow
-# # runner. This will cause the pipeline to fail on exit != 0.
-# if [ exit_code !=0 && "$input_fail" = true ]; then
-#     exit ${exit_code}
-# else
-#     exit 0
-# fi
