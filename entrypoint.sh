@@ -41,12 +41,14 @@ fi
 # Run broken link checker, save to markdown file, also show stdout & sterr while running
 # Use eval to capture exit_code and use later
 echo "blc $inputs_url $inputs_blc_args"
-blc $inputs_url $inputs_blc_args 2>&1 | tee $BLC_TMP
+# blc $inputs_url $inputs_blc_args 2>&1 | tee $BLC_TMP
+blc $inputs_url $inputs_blc_args >>$BLC_TMP
 exit_code=$?
 echo "exit code was ${exit_code}"
 echo ::set-output name=exit_code::$exit_code
 # Pass link-checker exit code to next step
 
+cat $BLC_TMP
 cat "${BLC_TMP}" >"${GITHUB_STEP_SUMMARY}"
 
 echo "[Full Github Actions output](${GITHUB_WORKFLOW_URL})" >>$BLC_TMP
