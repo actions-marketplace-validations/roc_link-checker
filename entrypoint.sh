@@ -8,7 +8,7 @@ YELLOW='\033[0;33m'
 PURPLE='\033[0;34m'
 
 # Env vars work! Great!
-echo "env:"$env
+echo "ENV:" $ENV
 
 # TODO
 # switch inputs from numbered to named args and pass through using ENV kind of like https://github.com/lycheeverse/lychee-action/blob/master/action.yml ✅
@@ -41,7 +41,7 @@ fi
 # Run broken link checker, save to markdown file, also show stdout & sterr while running
 # Use eval to capture exit_code and use later
 echo "blc $inputs_url $inputs_blc_args"
-eval blc $inputs_url $inputs_blc_args 2>&1 | tee $BLC_TMP
+blc $inputs_url $inputs_blc_args 2>&1 | tee $BLC_TMP
 exit_code=$?
 echo "exit code was ${exit_code}"
 echo ::set-output name=exit_code::$exit_code
