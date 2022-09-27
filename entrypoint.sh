@@ -41,7 +41,7 @@ echo "blc $inputs_url $inputs_blc_args"
 blc $inputs_url $inputs_blc_args 2>&1 | tee -a $BLC_TMP
 
 # Set exit code on broken count
-if grep -q 'BROKEN' <<<"$OUTPUT"; then
+if grep -q 'BROKEN' $BLC_TMP; then
     exit_code=1
 fi
 # TODO: how to caputre exit_code AND report to the console the output, even on exit code 1?
