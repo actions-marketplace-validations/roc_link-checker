@@ -11,9 +11,7 @@ jobs:
         uses: roc/link-checker@master
         with:
           url: "https://github.com/roc/link-checker"
-          honorRobotExclusions: true
-          ignorePatterns: "github"
-          recursiveLinks: false
-          force_follow: false
+          blc_args: --verbose --exclude github --follow false
+          allow_failures: true
       - name: Get the result
         run: echo "${{steps.link-report.outputs.result}}"

@@ -1,6 +1,6 @@
 name: "broken-link-check"
 description: "Find broken links, missing images, etc within your HTML."
-author: "Celine Kurpershoek"
+author: "roc"
 branding:
   icon: "anchor"
   color: "purple"
@@ -8,25 +8,13 @@ inputs:
   url: # id of input
     description: "Url of site"
     required: true
-    default: "https://github.com/celinekurpershoek/link-checker"
-  honorRobotExclusions:
-    description: "Overwrite standard skipping rel=nofollow links"
-    required: false
-    default: true
-  force_follow:
-    description: "Overwrite standard skipping rel=nofollow links"
-    required: false
-    default: false
-  ignorePatterns:
-    description: "Ignore urls based on patterns"
+    default: "https://github.com/roc/link-checker"
+  blc_args:
+    description: "BLC args"
     required: false
     default: ""
-  recursiveLinks:
-    description: "Walk through the whole website and check all the urls"
-    required: false
-    default: false
-  fail:
-    description: "Fail on broken links"
+  allow_failures:
+    description: "Pass the job even if the link checker finds broken links"
     required: false
     default: false
 outputs:
@@ -37,11 +25,8 @@ runs:
   image: "Dockerfile"
   args:
     - ${{ inputs.url }}
-    - ${{ inputs.honorRobotExclusions }}
-    - ${{ inputs.ignorePatterns }}
-    - ${{ inputs.recursiveLinks }}
-    - ${{ inputs.fail }}
   env:
     inputs_url: ${{ inputs.url }}
-    input_fail: ${{ inputs.fail }}
-    input_force_follow: ${{ inputs.force_follow }}
+    inputs_allow_failures: ${{ inputs.allow_failures }}
+    inputs_blc_args: ${{ inputs.blc_args }}
+  # shell: bash
