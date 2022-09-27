@@ -29,4 +29,3 @@ runs:
     inputs_url: ${{ inputs.url }}
     inputs_allow_failures: ${{ inputs.allow_failures }}
     inputs_blc_args: ${{ inputs.blc_args }}
-  # shell: bash
