@@ -26,7 +26,7 @@ mkdir -p "$(dirname $BLC_TMP)"
 npm i -g broken-link-checker -s
 
 echo "## Broken link checker report" 2>&1 | tee $BLC_TMP
-echo "### Running broken link checker on URL: $inputs_url"\n\n 2>&1 | tee -a $BLC_TMP
+echo "### Running broken link checker on URL: $inputs_url" 2>&1 | tee -a $BLC_TMP
 
 if [ -z "$inputs_url" ] || [ "$inputs_url" == 'https://github.com/roc/link-checker' ]; then
     echo -e "**Warning:** Running test on default URL, please provide a URL in your action.yml." >>$BLC_TMP
@@ -39,6 +39,8 @@ echo "blc $inputs_url $inputs_blc_args"
 echo '```' >>$BLC_TMP
 blc $inputs_url $inputs_blc_args 2>&1 | tee -a $BLC_TMP
 echo '```' >>$BLC_TMP
+
+# TODO: a bit of rewriting the file to make it immediately obvious which links are broken
 
 # Set exit code on broken count
 if grep -q 'BROKEN' $BLC_TMP; then
