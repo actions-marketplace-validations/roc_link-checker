@@ -7,9 +7,6 @@ GREEN='\033[0;32m'
 YELLOW='\033[0;33m'
 PURPLE='\033[0;34m'
 
-# Env vars work! Great!
-echo "ENV:" $ENV
-
 # TODO
 # switch inputs from numbered to named args and pass through using ENV kind of like https://github.com/lycheeverse/lychee-action/blob/master/action.yml ✅
 # set all vars as named env vars ✅
@@ -31,8 +28,8 @@ mkdir -p "$(dirname $BLC_TMP)"
 # Install the broken-link-checker module globally on the docker instance
 npm i -g broken-link-checker -s
 
-echo -e "$PURPLE=== BROKEN LINK CHECKER ===$NC" >>$BLC_TMP
-echo -e "Running broken link checker on URL: $GREEN $inputs_url $NC" >>$BLC_TMP
+echo -e "$PURPLE=== BROKEN LINK CHECKER ===$NC" 2>&1 | tee $BLC_TMP
+echo -e "Running broken link checker on URL: $GREEN $inputs_url $NC" 2>&1 | tee -a $BLC_TMP
 
 if [ -z "$inputs_url" ] || [ "$inputs_url" == 'https://github.com/roc/link-checker' ]; then
     echo -e "$YELLOW Warning: Running test on default URL, please provide a URL in your action.yml.$NC" >>$BLC_TMP
@@ -41,14 +38,19 @@ fi
 # Run broken link checker, save to markdown file, also show stdout & sterr while running
 # Use eval to capture exit_code and use later
 echo "blc $inputs_url $inputs_blc_args"
-# blc $inputs_url $inputs_blc_args 2>&1 | tee $BLC_TMP
-eval blc $inputs_url $inputs_blc_args >>$BLC_TMP
-exit_code=$?
-echo "exit code was ${exit_code}"
-echo ::set-output name=exit_code::$exit_code
-# Pass link-checker exit code to next step
+blc $inputs_url $inputs_blc_args 2>&1 | tee -a $BLC_TMP
 
-cat $BLC_TMP
+# Set exit code on broken count
+if grep -q 'BROKEN' <<<"$OUTPUT"; then
+    exit_code=1
+fi
+# TODO: how to caputre exit_code AND report to the console the output, even on exit code 1?
+# exit_code=$?
+echo "exit code was ${exit_code}"
+
+# Pass link-checker exit code to next step
+echo ::set-output name=exit_code::$exit_code
+
 cat "${BLC_TMP}" >"${GITHUB_STEP_SUMMARY}"
 
 echo "[Full Github Actions output](${GITHUB_WORKFLOW_URL})" >>$BLC_TMP
