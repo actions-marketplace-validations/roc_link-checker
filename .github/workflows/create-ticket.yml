@@ -11,7 +11,8 @@ jobs:
         uses: roc/link-checker@master
         with:
           url: "https://github.com/roc/link-checker"
-          blc_args: --verbose --exclude github --follow false
+          # important: https://fooasldn.com/ comes back as BLC_ROBOTS without follow=true
+          blc_args: --verbose --exclude github --follow true
           allow_failures: true
           output_file: yeah/blc/out.md
 
