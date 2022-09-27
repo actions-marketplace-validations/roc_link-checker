@@ -15,7 +15,7 @@ jobs:
           allow_failures: true
       - name: Get the result
         run: |
-          echo "steps.link-report.outputs.exit_code was:" ${{"steps.link-report.outputs.exit_code}}
+          echo "steps.link-report.outputs.exit_code was:" ${{steps.link-report.outputs.exit_code}}
           # echo "steps.link-report.outputs.result:" ${{steps.link-report.outputs.result}}
           ls -lah
           echo "cat blc/out.md"
