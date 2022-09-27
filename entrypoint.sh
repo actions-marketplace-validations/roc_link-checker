@@ -10,16 +10,6 @@ PURPLE='\033[0;34m'
 # Env vars work! Great!
 echo "env:"$env
 
-# Setup temporary file for output
-BLC_TMP="${inputs_output_file:-blc/out.md}"
-GITHUB_WORKFLOW_URL="https://github.com/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}?check_suite_focus=true"
-
-# Create temp dir
-mkdir -p "$(dirname $BLC_TMP)"
-
-# Install the broken-link-checker module globally on the docker instance
-npm i -g broken-link-checker -s
-
 # TODO
 # switch inputs from numbered to named args and pass through using ENV kind of like https://github.com/lycheeverse/lychee-action/blob/master/action.yml ✅
 # set all vars as named env vars ✅
@@ -30,6 +20,16 @@ npm i -g broken-link-checker -s
 # capture  exit code and choose whether to use it or not ✅
 # make and store output of report to be passed to issue filing next step
 # Pass link-checker exit code to next step
+
+# Setup temporary file for output
+BLC_TMP="${inputs_output_file:-blc/out.md}"
+GITHUB_WORKFLOW_URL="https://github.com/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}?check_suite_focus=true"
+
+# Create temp dir
+mkdir -p "$(dirname $BLC_TMP)"
+
+# Install the broken-link-checker module globally on the docker instance
+npm i -g broken-link-checker -s
 
 echo -e "$PURPLE=== BROKEN LINK CHECKER ===$NC" >>$BLC_TMP
 echo -e "Running broken link checker on URL: $GREEN $inputs_url $NC" >>$BLC_TMP
