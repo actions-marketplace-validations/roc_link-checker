@@ -42,7 +42,7 @@ fi
 # Use eval to capture exit_code and use later
 echo "blc $inputs_url $inputs_blc_args"
 # blc $inputs_url $inputs_blc_args 2>&1 | tee $BLC_TMP
-blc $inputs_url $inputs_blc_args >>$BLC_TMP
+eval blc $inputs_url $inputs_blc_args >>$BLC_TMP
 exit_code=$?
 echo "exit code was ${exit_code}"
 echo ::set-output name=exit_code::$exit_code
