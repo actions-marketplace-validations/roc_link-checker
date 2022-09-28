@@ -25,8 +25,11 @@ inputs:
 outputs:
   report:
     description: "Location of the report file"
+    value: ${{ steps.blc.outputs.report }}
+
   exit_code:
     description: "The exit code returned from BLC"
+    value: ${{ steps.blc.outputs.exit_code }}
 
 runs:
   using: "composite"
@@ -35,6 +38,7 @@ runs:
       run: npm i -g broken-link-checker -s
       shell: bash
     - name: Run broken link checker
+    - id: blc
       shell: bash
       run: ${{ github.action_path }}/entrypoint.sh
       env:
