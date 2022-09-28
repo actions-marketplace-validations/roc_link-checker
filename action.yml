@@ -25,10 +25,8 @@ inputs:
 outputs:
   report:
     description: "Location of the report file"
-    value: ${{ steps.link-report.outputs.report }}
   exit_code:
     description: "The exit code returned from BLC"
-    value: ${{ steps.link-report.outputs.exit_code }}
 
 runs:
   using: "composite"
@@ -39,7 +37,6 @@ runs:
     - name: Run broken link checker
       shell: bash
       run: ${{ github.action_path }}/entrypoint.sh
-      id: link-report
       env:
         inputs_url: ${{ inputs.url }}
         inputs_allow_failures: ${{ inputs.allow_failures }}
