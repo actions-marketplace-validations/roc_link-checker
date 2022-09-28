@@ -6,11 +6,6 @@ jobs:
     runs-on: ubuntu-latest
     name: Check for broken links
     steps:
-      - uses: actions/setup-node@v2
-        with:
-          node-version: 16.x
-          cache: "npm"
-          cache-dependency-path: ui/package-lock.json
       - name: Check for broken links
         id: link-report
         uses: roc/link-checker@master
