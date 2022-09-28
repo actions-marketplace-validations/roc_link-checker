@@ -32,7 +32,6 @@ runs:
   using: "composite"
   steps:
     - name: Install BLC
-      uses: actions/setup-node@v2
       run: npm i -g broken-link-checker -s
       shell: bash
     - name: Run broken link checker
