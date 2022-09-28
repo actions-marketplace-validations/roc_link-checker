@@ -4,7 +4,7 @@ on: [push]
 jobs:
   brokenLinks:
     runs-on: ubuntu-latest
-    name: Check for broken links
+    name: Check links, Create issue
     steps:
       - name: Check for broken links
         id: link-report
