@@ -15,10 +15,6 @@ jobs:
           allow_failures: true
       - name: Get the result
         run: |
-          echo "steps.blc"
-          echo ${{ steps.blc.outputs.exit_code }}
-          echo ${{ steps.blc.outputs.report }}
           echo "steps.link-report.outputs.exit_code was:" ${{steps.link-report.outputs.exit_code}}
-          ls -lah
           echo "cat ${{steps.link-report.outputs.report}}"
           cat ${{steps.link-report.outputs.report}}

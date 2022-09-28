@@ -16,16 +16,6 @@ jobs:
           allow_failures: true
           output_file: yeah/blc/out.md
 
-      - name: State outputs
-        run: |
-          echo "steps.blc"
-          echo ${{ steps.blc.outputs.exit_code }}
-          echo ${{ steps.blc.outputs.report }}
-          echo steps ${{steps}}
-          echo ${{steps.link-report.outputs}}
-          echo ${{steps.link-report.outputs.report}}
-          echo ${{steps.link-report.outputs.exit_code}}
-
       - name: Create Issue From File
         uses: peter-evans/create-issue-from-file@v4
         if: ${{ steps.link-report.outputs.exit_code != 0 }}
