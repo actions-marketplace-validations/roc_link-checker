@@ -2,17 +2,6 @@
 # Fail when any task exits with a non-zero error
 set -e
 
-# TODO
-# switch inputs from numbered to named args and pass through using ENV kind of like https://github.com/lycheeverse/lychee-action/blob/master/action.yml ✅
-# set all vars as named env vars ✅
-# pipe all output into a md/output file ✅
-# allow passing of all args to blc, --verbose, --filter-level, --get, --user-agent etc ✅
-# Full list of options: https://github.com/stevenvachon/broken-link-checker#options
-# pass output to next steps
-# capture  exit code and choose whether to use it or not ✅
-# make and store output of report to be passed to issue filing next step ✅
-# Pass link-checker exit code to next step ✅
-
 # Setup temporary file for output
 BLC_TMP="${inputs_output_file:-blc/out.md}"
 GITHUB_WORKFLOW_URL="https://github.com/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}?check_suite_focus=true"
@@ -27,11 +16,10 @@ if [ -z "$inputs_url" ] || [ "$inputs_url" == 'https://github.com/roc/link-check
     echo -e "**Warning:** Running test on default URL, please provide a URL in your action.yml." >>$BLC_TMP
 fi
 
-# Run broken link checker, save to markdown file, also show stdout & sterr while running
-# Use eval to capture exit_code and use later
 echo "blc $inputs_url $inputs_blc_args"
 # Wrap report in backticks for md rendering
 echo '```' >>$BLC_TMP
+# Run broken link checker, save to markdown file, also show stdout & sterr while running
 blc $inputs_url $inputs_blc_args 2>&1 | tee -a $BLC_TMP
 echo '```' >>$BLC_TMP
 
