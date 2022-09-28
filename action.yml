@@ -25,8 +25,10 @@ inputs:
 outputs:
   report:
     description: "Location of the report file"
+    value: ${{ steps.link-report.outputs.report }}
   exit_code:
     description: "The exit code returned from BLC"
+    value: ${{ steps.link-report.outputs.exit_code }}
 
 runs:
   using: "composite"
