@@ -2,8 +2,6 @@
 # Fail when any task exits with a non-zero error
 set -e
 
-PURPLE='\033[0;34m'
-
 # TODO
 # switch inputs from numbered to named args and pass through using ENV kind of like https://github.com/lycheeverse/lychee-action/blob/master/action.yml ✅
 # set all vars as named env vars ✅
@@ -12,8 +10,8 @@ PURPLE='\033[0;34m'
 # Full list of options: https://github.com/stevenvachon/broken-link-checker#options
 # pass output to next steps
 # capture  exit code and choose whether to use it or not ✅
-# make and store output of report to be passed to issue filing next step
-# Pass link-checker exit code to next step
+# make and store output of report to be passed to issue filing next step ✅
+# Pass link-checker exit code to next step ✅
 
 # Setup temporary file for output
 BLC_TMP="${inputs_output_file:-blc/out.md}"
@@ -57,7 +55,7 @@ cat "${BLC_TMP}" >"${GITHUB_STEP_SUMMARY}"
 
 echo "[Full Github Actions output](${GITHUB_WORKFLOW_URL})" >>$BLC_TMP
 
-echo ::set-output name=result::$(cat $BLC_TMP)
+echo ::set-output name=report::$BLC_TMP
 
 # If `inputs_allow_failures` is set to `false`, propagate the real exit value to the workflow
 # runner. This will cause the pipeline to fail on exit != 0.

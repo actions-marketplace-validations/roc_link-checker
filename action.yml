@@ -23,17 +23,19 @@ inputs:
     required: false
 
 outputs:
-  result: # id of output
-    description: "Report of links"
+  report:
+    description: "Location of the report file"
   exit_code:
     description: "The exit code returned from BLC"
+
 runs:
-  using: "docker"
-  image: "Dockerfile"
-  args:
-    - ${{ inputs.url }}
-  env:
-    inputs_url: ${{ inputs.url }}
-    inputs_allow_failures: ${{ inputs.allow_failures }}
-    inputs_blc_args: ${{ inputs.blc_args }}
-    inputs_output_file: ${{ inputs.output_file }}
+  using: "composite"
+  steps:
+    - name: Run broken link checker
+      shell: bash
+      run: ${{ github.action_path }}/entrypoint.sh
+      env:
+        inputs_url: ${{ inputs.url }}
+        inputs_allow_failures: ${{ inputs.allow_failures }}
+        inputs_blc_args: ${{ inputs.blc_args }}
+        inputs_output_file: ${{ inputs.output_file }}

@@ -30,7 +30,7 @@ jobs:
           ignorePatterns: "github,google"
           recursiveLinks: false # Check all URLs on all reachable pages (could take a while)
       - name: Get the result
-        run: echo "${{steps.link-report.outputs.result}}"
+        run: echo "${{steps.link-report.outputs.report}}"
 ```
 
 ## Optional parameters:
