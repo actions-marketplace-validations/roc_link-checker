@@ -7,7 +7,7 @@ jobs:
     name: Check for broken links
     steps:
       - name: Check for broken links
-        id: link-report
+        # id: link-report
         uses: roc/link-checker@master
         with:
           url: "https://github.com/roc/link-checker"
