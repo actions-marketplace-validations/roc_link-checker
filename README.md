@@ -1,12 +1,12 @@
-# Broken link check action
-
-This action uses: https://github.com/stevenvachon/broken-link-checker and is based on [the lychee link checker action](https://github.com/lycheeverse/lychee-action) and https://github.com/celinekurpershoek/link-checker
+# Broken link checker action 🕵️‍♂️
 
 Find broken links in your website.
 
+This action uses the node based [broken-link-checker](https://github.com/stevenvachon/broken-link-checker) and is heavily based on [the lychee link checker action](https://github.com/lycheeverse/lychee-action) and [celinekurpershoek's link checker action](https://github.com/celinekurpershoek/link-checker).
+
 ## How to use
 
-Create a new file in your repository .github/workflows/action.yml.
+Create a new file in your repository .github/workflows/find-broken-links.yml.
 
 ### Add link checking on push
 
@@ -26,8 +26,8 @@ jobs:
         uses: roc/link-checker@master
         with:
           url: {WEBSITE_LOCATION}
-          blc_args: --verbose --exclude github --follow false
-          allow_failures: true
+          blc_args: --verbose --exclude github --follow false # can be any blc args
+          allow_failures: true # do not fail the job if broken links are found
       - name: Get the result
         run: |
           echo "steps.link-report.outputs.exit_code was:" ${{steps.link-report.outputs.exit_code}}
@@ -68,6 +68,29 @@ jobs:
           labels: report, automated issue
 ```
 
+## workflow inputs
+
+This workflow takes blc options as `blc_args` but has some additional inputs:
+
+```
+  url:
+    description: "Url of site"
+    required: true
+    default: "https://github.com/roc/link-checker"
+```
+
+```
+  allow_failures:
+    description: "Pass the job even if the link checker finds broken links"
+    required: false
+    default: false
+  output_file:
+    description: "Summary output file path"
+    default: "blc/out.md"
+    required: false
+```
+
+The output file generated is attached to the workflow report and can be passed to a subsequent step to raise an issue.
 
 ## blc parameters
 
