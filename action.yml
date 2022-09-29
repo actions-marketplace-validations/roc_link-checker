@@ -1,4 +1,4 @@
-name: "broken-link-check"
+name: "broken-link-checker"
 description: "Find broken links, missing images, etc within your HTML."
 author: "roc"
 branding:
