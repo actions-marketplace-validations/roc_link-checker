@@ -1,6 +1,6 @@
 # Broken link check action
 
-This action uses: https://github.com/stevenvachon/broken-link-checker
+This action uses: https://github.com/stevenvachon/broken-link-checker and is based on [the lychee link checker action](https://github.com/lycheeverse/lychee-action) and https://github.com/celinekurpershoek/link-checker
 
 Find broken links in your website.
 
@@ -8,7 +8,9 @@ Find broken links in your website.
 
 Create a new file in your repository .github/workflows/action.yml.
 
-Copy-paste the following workflow in your action.yml file:
+### Add link checking on push
+
+You can pass in any of the options availible in the [broken link checker cli](https://github.com/stevenvachon/broken-link-checker/blob/main/lib/cli.js#L549-L570)
 
 ```yml
 name: Broken link check
@@ -21,43 +23,86 @@ jobs:
     steps:
       - name: Check for broken links
         id: link-report
-        uses: celinekurpershoek/link-checker@v1.0.2
+        uses: roc/link-checker@master
         with:
-          # Required:
-          url: "https://..."
-          # optional:
-          honorRobotExclusions: false
-          ignorePatterns: "github,google"
-          recursiveLinks: false # Check all URLs on all reachable pages (could take a while)
+          url: {WEBSITE_LOCATION}
+          blc_args: --verbose --exclude github --follow false
+          allow_failures: true
       - name: Get the result
-        run: echo "${{steps.link-report.outputs.report}}"
+        run: |
+          echo "steps.link-report.outputs.exit_code was:" ${{steps.link-report.outputs.exit_code}}
+          echo "cat ${{steps.link-report.outputs.report}}"
+          cat ${{steps.link-report.outputs.report}}
 ```
 
-## Optional parameters:
+### Create a ticket when a broken link is detected
 
-### `honorRobotExclusions`
+You may not want to fail a job when broken links are detected. This can be achieved by passing `allow_failures: true` and adding an additional action step:
 
-Type: `Boolean`
-Default value: `true`
-The script does not scan pages that search engine crawlers would not follow.
-https://github.com/stevenvachon/broken-link-checker#honorrobotexclusions
+```
+name: Broken link check with issue creation
+on: [push]
 
-### `ignorePatterns`
+jobs:
+  brokenLinks:
+    runs-on: ubuntu-latest
+    name: Check links, Create issue
+    steps:
+      - name: Check for broken links
+        id: link-report
+        uses: roc/link-checker@master
+        with:
+          url: "https://github.com/roc/link-checker"
+          # important: https://fooasldn.com/ comes back as BLC_ROBOTS without follow=true
+          blc_args: --verbose --exclude github --follow true
+          allow_failures: true
+          output_file: yeah/blc/out.md
 
-type: `String`
-Default value: `''`
-A comma-separated string of matched URLs to ignore. Check documentation about patterns here: https://github.com/stevenvachon/broken-link-checker#excludedkeywords
+      - name: Create Issue From File
+        uses: peter-evans/create-issue-from-file@v4
+        # See https://docs.github.com/en/actions/using-jobs/using-conditions-to-control-job-execution
+        if: ${{ steps.link-report.outputs.exit_code != 0 }}
+        with:
+          title: Link Checker Report for github.com/roc/link-checker
+          content-filepath: ${{steps.link-report.outputs.report}}
+          labels: report, automated issue
+```
 
-### `recursiveLinks`
 
-type: `Boolean`
-Default value: `false`
-A boolean to do a site-wide check, it will add the `blc` `-ro` param to the command
+## blc parameters
 
-## todo:
+This action is intended as a very simple call on the `blc` tool. The full list of options:
 
-- [ ] Create issue if broken URLs are found
-- [ ] Parse each broken link in report on new line
+```
+Usage
+  blc [OPTIONS] [ARGS]
+
+Options
+  --exclude               A keyword/glob to match links against. Can be used multiple times.
+  --exclude-external, -e  Will not check external links.
+  --exclude-internal, -i  Will not check internal links.
+  --filter-level          The types of tags and attributes that are considered links.
+                            0: clickable links
+                            1: 0 + media, iframes, meta refreshes
+                            2: 1 + stylesheets, scripts, forms
+                            3: 2 + metadata
+                            Default: 1
+  --follow, -f            Force-follow robot exclusions.
+  --get, -g               Change request method to GET.
+  --help, -h, -?          Display this help text.
+  --input                 URL to an HTML document.
+  --host-requests         Concurrent requests limit per host.
+  --ordered, -o           Maintain the order of links as they appear in their HTML document.
+  --recursive, -r         Recursively scan ("crawl") the HTML document(s).
+  --requests              Concurrent requests limit.
+  --user-agent            The user agent to use for link checks.
+  --verbose, -v           Display excluded links.
+  --version, -V           Display the app version.
+
+Arguments
+  INPUT                   Alias to --input
+```
+
 
 ## Test
 
