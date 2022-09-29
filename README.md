@@ -39,7 +39,7 @@ jobs:
 
 You may not want to fail a job when broken links are detected. This can be achieved by passing `allow_failures: true` and adding an additional action step:
 
-```
+```yml
 name: Broken link check with issue creation
 on: [push]
 
